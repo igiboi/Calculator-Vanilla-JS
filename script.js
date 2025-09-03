@@ -1,79 +1,84 @@
-let display = '0';
+const INITIAL_STATE = {
+  display: '0',
+  accumulator: null,
+  operator: null,
+  awaitingNext: false,
+};
 
-//--- render ---
-function render(value) {
-  document.querySelector('#display').textContent = value;
+let calculatorState = { ...INITIAL_STATE };
+
+function renderDisplay() {
+  document.querySelector('#display').textContent = calculatorState.display;
 }
 
-function updateDisplay(current, action) {
+function calculatorReducer(previousState, action) {
   switch (action.type) {
     case 'DIGIT': {
-      // requirement: replace 0 OR append
-      const digit = action.value;
-      if (current === '0') {
-        return digit;
+      const pressedDigit = action.value;
+      const currentDisplay = previousState.display;
+      let updatedDisplay;
+
+      if (currentDisplay === '0') {
+        updatedDisplay = pressedDigit; // replace leading "0"
       } else {
-        return current + digit;
+        updatedDisplay = currentDisplay + pressedDigit; // append
       }
+
+      return { ...previousState, display: updatedDisplay };
     }
+
     case 'DOT': {
-      if (current.includes('.')) {
-        return current;
+      const currentDisplay = previousState.display;
+
+      if (currentDisplay.includes('.')) {
+        return previousState; // ignore extra dot
       } else {
-        return current + '.';
+        const updatedDisplay = currentDisplay + '.';
+        return { ...previousState, display: updatedDisplay };
       }
     }
+
     case 'AC': {
-      return '0';
+      return { ...INITIAL_STATE }; // full reset
     }
 
     case 'DEL': {
-      if (display.length > 1) {
-        return display.slice(0, display.length - 1);
+      const currentDisplay = previousState.display;
+      let updatedDisplay;
+
+      if (currentDisplay.length > 1) {
+        updatedDisplay = currentDisplay.slice(0, -1); // remove last char
       } else {
-        return '0';
+        updatedDisplay = '0'; // clamp at "0"
       }
+
+      return { ...previousState, display: updatedDisplay };
     }
 
     default:
-      return current; // no change for other actions
+      return previousState;
   }
 }
 
-// 1. Find the calculator keys area
-const keys = document.querySelector('#keys');
+const keysContainer = document.querySelector('#keys');
 
-// 2. Listen for clicks inside the keys area
-keys.addEventListener('click', function (event) {
-  // 3. Figure out what element was clicked
-  const clickedElement = event.target;
+keysContainer.addEventListener('click', (event) => {
+  const clickedTarget = event.target;
+  if (!(clickedTarget instanceof HTMLButtonElement)) return;
 
-  // 4. Only continue if it was a button
-  if (!(clickedElement instanceof HTMLButtonElement)) {
-    return; // stop if you clicked something else
-  }
+  const buttonType = clickedTarget.dataset.key; // "digit" | "dot" | "ac" | "del"
+  const buttonPayload = clickedTarget.dataset.value; // e.g., "7" for digits
 
-  // 5. Look at the button’s dataset
-  const buttonKey = clickedElement.dataset.key; // e.g. "digit"
-  const buttonValue = clickedElement.dataset.value; // e.g. "7"
-
-  // 6. Decide what action object to create
   let action;
-  if (buttonKey === 'digit') {
-    action = { type: 'DIGIT', value: buttonValue };
-  } else if (buttonKey === 'dot') {
-    action = { type: 'DOT' };
-  } else if (buttonKey === 'ac') {
-    action = { type: 'AC' };
-  } else if (buttonKey === 'del') {
-    action = { type: 'DEL' };
-  } else {
-    return; // not handling other buttons yet
-  }
+  if (buttonType === 'digit') action = { type: 'DIGIT', value: buttonPayload };
+  else if (buttonType === 'dot') action = { type: 'DOT' };
+  else if (buttonType === 'ac') action = { type: 'AC' };
+  else if (buttonType === 'del') action = { type: 'DEL' };
+  else return;
 
-  // 7. Update the display using our reducer
-  display = updateDisplay(display, action);
-
-  // 8. Re-render the UI
-  render(display);
+  calculatorState = calculatorReducer(calculatorState, action);
+  renderDisplay();
 });
+
+// initial paint
+renderDisplay();
