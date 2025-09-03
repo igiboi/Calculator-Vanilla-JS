@@ -47,7 +47,7 @@ function calculatorReducer(previousState, action) {
       let updatedDisplay;
 
       if (currentDisplay.length > 1) {
-        updatedDisplay = currentDisplay.slice(0, -1); // remove last char
+        updatedDisplay = currentDisplay.slice(0, currentDisplay.length - 1); // remove last char
       } else {
         updatedDisplay = '0'; // clamp at "0"
       }
