@@ -1,47 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <title>Calculator</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>Calculator</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-  <div id="calculator">
-    <!-- display -->
-    <div id="display">0</div>
+    <div id="calculator">
+        <!-- display -->
+        <div id="history"></div>
+        <div id="display">0</div>
 
-    <!-- keys -->
-    <div id="keys">
-      <!-- row 1 -->
-      <button data-key="digit" data-value="7">7</button>
-      <button data-key="digit" data-value="8">8</button>
-      <button data-key="digit" data-value="9">9</button>
-      <button data-key="op" data-value="÷">÷</button>
+        <!-- keys -->
+        <div id="keys">
+            <!-- row 1 -->
+            <button data-key="digit" data-value="7">7</button>
+            <button data-key="digit" data-value="8">8</button>
+            <button data-key="digit" data-value="9">9</button>
+            <button data-key="op" data-value="÷">÷</button>
 
-      <!-- row 2 -->
-      <button data-key="digit" data-value="4">4</button>
-      <button data-key="digit" data-value="5">5</button>
-      <button data-key="digit" data-value="6">6</button>
-      <button data-key="op" data-value="×">×</button>
+            <!-- row 2 -->
+            <button data-key="digit" data-value="4">4</button>
+            <button data-key="digit" data-value="5">5</button>
+            <button data-key="digit" data-value="6">6</button>
+            <button data-key="op" data-value="×">×</button>
 
-      <!-- row 3 -->
-      <button data-key="digit" data-value="1">1</button>
-      <button data-key="digit" data-value="2">2</button>
-      <button data-key="digit" data-value="3">3</button>
-      <button data-key="op" data-value="−">−</button>
+            <!-- row 3 -->
+            <button data-key="digit" data-value="1">1</button>
+            <button data-key="digit" data-value="2">2</button>
+            <button data-key="digit" data-value="3">3</button>
+            <button data-key="op" data-value="−">−</button>
 
-      <!-- row 4 -->
-      <button data-key="digit" data-value="0">0</button>
-      <button data-key="dot">.</button>
-      <button data-key="eq">=</button>
-      <button data-key="op" data-value="+">+</button>
+            <!-- row 4 -->
+            <button data-key="digit" data-value="0">0</button>
+            <button data-key="dot">.</button>
+            <button data-key="eq">=</button>
+            <button data-key="op" data-value="+">+</button>
 
-      <!-- row 5 (utility keys) -->
-      <button data-key="ac">AC</button>
-      <button data-key="del">⌫</button>
+            <!-- row 5 (utility keys) -->
+            <button data-key="ac">AC</button>
+            <button data-key="del">⌫</button>
+        </div>
     </div>
-  </div>
 
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
+
 </html>
