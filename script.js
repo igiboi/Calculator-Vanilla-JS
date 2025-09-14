@@ -60,37 +60,40 @@ function calculatorReducer(previousState, action) {
     case 'DIGIT': {
       // If we just pressed an operator, we're awaiting the next number:
       // the first digit typed now should REPLACE the display.
-      const pressedDigit = action.value;
-      const currentDisplay = previousState.display;
+      //   const pressedDigit = action.value;
+    //   const currentDisplay = previousState.display;
 
       if (previousState.awaitingNext === true) {
-        return {
+        const newState = {
           ...previousState,
-          display: pressedDigit, // start fresh with this digit
+          // overide the previous data change awaitingNext value
+          display: action.value, // start fresh with this digit
           awaitingNext: false, // we're now typing the right-hand number
         };
+        // reducer returns new state
+        return newState;
       }
 
       // Otherwise, normal typing rules: replace "0" or append.
-      let updatedDisplay;
-      if (currentDisplay === '0') {
-        updatedDisplay = pressedDigit; // avoid "07"
-      } else {
-        updatedDisplay = currentDisplay + pressedDigit;
-      }
+      const currentlyDisplayingZero = previousState.display === '0';
+      const updatedDisplay = currentlyDisplayingZero
+        ? action.value
+        : previousState.display; + action.value;
 
-      return { ...previousState, display: updatedDisplay };
+      const newState = { ...previousState, display: updatedDisplay };
+      return newState;
     }
 
     case 'DOT': {
       // Allow only one decimal point per number.
-      const currentDisplay = previousState.display;
+      //   const currentDisplay = previousState.display;
 
-      if (currentDisplay.includes('.')) {
+      if (previousState.display.includes('.')) {
         return previousState; // ignore extra dot
       } else {
-        const updatedDisplay = currentDisplay + '.';
-        return { ...previousState, display: updatedDisplay };
+        const updatedDisplay = previousState.display + '.';
+        const newState = { ...previousState, display: updatedDisplay };
+        return newState;
       }
     }
 
@@ -101,11 +104,11 @@ function calculatorReducer(previousState, action) {
 
     case 'DEL': {
       // Delete the last character. If only one left, go back to "0".
-      const currentDisplay = previousState.display;
+    //   const currentDisplay = previousState.display;
       let updatedDisplay;
 
-      if (currentDisplay.length > 1) {
-        updatedDisplay = currentDisplay.slice(0, -1);
+      if (previousState.display.length > 1) {
+        updatedDisplay = previousState.display.slice(0, -1);
       } else {
         updatedDisplay = '0';
       }
@@ -168,7 +171,11 @@ keysContainer.addEventListener('click', (event) => {
   else return; // ignore other buttons for now (e.g., '=' until we implement it)
 
   // Run the "brain": previous state + action -> new state
-  calculatorState = calculatorReducer(calculatorState, action);
+  // reassign a new state
+  // generating a new state object completely replace state object
+  // reducer pure functions, does not modify, generator not a changer
+  const newState = calculatorReducer(calculatorState, action);
+  calculatorState = newState;
 
   // Paint the new state's display to the UI
   renderDisplay();
